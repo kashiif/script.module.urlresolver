@@ -48,15 +48,20 @@ class DailymotionResolver(Plugin, UrlResolver, PluginSettings):
             
             raise UrlResolver.ResolverError(err_message)
         
-        imgSrc = re.compile('"thumbnail_url":"(.+?)"').findall(link)[0]
+        imgSrc = ''
+        matches = re.compile('"thumbnail_url":"(.+?)"').findall(link)
+
+        if len(matches):
+            imgSrc = matches[0]
+
         common.addon.log('img:' + imgSrc)
         
         dm_live = re.compile('live_rtsp_url":"(.+?)"', re.DOTALL).findall(link)
-        dm_1080p = re.compile('"stream_h264_hd1080_url":"(.+?)"', re.DOTALL).findall(link)
-        dm_720p = re.compile('"stream_h264_hd_url":"(.+?)"', re.DOTALL).findall(link)
-        dm_high = re.compile('"stream_h264_hq_url":"(.+?)"', re.DOTALL).findall(link)
-        dm_low = re.compile('"stream_h264_url":"(.+?)"', re.DOTALL).findall(link)
-        dm_low2 = re.compile('"stream_h264_ld_url":"(.+?)"', re.DOTALL).findall(link)
+        dm_1080p = re.compile('"1080"\:\[\{"type"\:".+?","url":"(.+?)"', re.DOTALL).findall(link)
+        dm_720p = re.compile('"720"\:\[\{"type"\:".+?","url":"(.+?)"', re.DOTALL).findall(link)
+        dm_high = re.compile('"480"\:\[\{"type"\:".+?","url":"(.+?)"', re.DOTALL).findall(link)
+        dm_low  = re.compile('"380"\:\[\{"type"\:".+?","url":"(.+?)"', re.DOTALL).findall(link)
+        dm_low2 = re.compile('"240"\:\[\{"type"\:".+?","url":"(.+?)"', re.DOTALL).findall(link)
         
         videoUrl = []
         
